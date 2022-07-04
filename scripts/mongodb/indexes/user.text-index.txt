@@ -1,0 +1,21 @@
+
+db.user.createIndex({
+  
+  'user_info.email': 'text',
+  'user_infotype': 'text',
+  
+  'charity_info.name': 'text',
+  'charity_info.address': 'text',
+  'charity_info.contact_number': 'text',
+  'charity_info.categories': 'text',
+  'charity_info.contact_person': 'text',
+  'charity_info.contact_person_number': 'text',
+  'charity_info.contact_person_email': 'text',
+  'charity_info.description': 'text',
+  
+  'donor_info.full_name': 'text',
+  'donor_info.contact_number': 'text',
+  'donor_info.landline': 'text',
+  'donor_info.home_address': 'text',
+  'donor_info.employment': 'text'
+})

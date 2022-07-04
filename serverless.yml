@@ -1,0 +1,104 @@
+app: file-service
+service: file-service
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+  - serverless-latest-layer-version
+  # - serverless-domain-manager
+
+custom:
+  # customDomain:
+  #   domainName: ${self:provider.stage}-api.sendwell.com
+  #   stage: ${self:provider.stage}
+  #   basePath: file
+  #   certificateName: "*.sendwell.com"
+  #   createRoute53Record: false
+  #   endpointType: "regional"
+  #   securityPolicy: tls_1_2
+  #   autoDomain: false
+  # adminUrl:
+  #   dev: http://localhost:3000
+  #   test: http://localhost:3000
+  #   prod: http://localhost:3000
+  # authorizer:
+  #   arn: arn:aws:lambda:${self:provider.region}:${ssm:sendwell-account-id}:function:file-service-${self:provider.stage}-authorizer
+  #   resultTtlInSeconds: 0
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 3000 #MB
+  # ephemeralStorageSize: 7000 #MB
+  stage: ${opt:stage, 'dev'}
+  region: us-east-2
+  timeout: 30
+
+  apiGateway:
+    shouldStartNameWithService: true
+    binaryMediaTypes:
+      - "multipart/form-data"
+
+  environment:
+    LOG_LEVEL: silly
+    STAGE: ${self:provider.stage}
+    REGION: ${self:provider.region}
+
+  layers:
+    - arn:aws:lambda:${self:provider.region}:${ssm:sendwell-account-id}:layer:lambda-layer-${self:provider.stage}:latest
+
+  iamRoleStatements:
+    # s3 upload files
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource:
+        - arn:aws:s3:::sendwell-raw-files/*
+
+package:
+  exclude:
+    - .vscode/**
+    - node_modules/**
+
+functions:
+  upload:
+    handler: src/uploadFile/lambda.handler
+    # layers: ${self:custom.layers}
+    events:
+      - http:
+          # authorizer: ${self:custom.authorizer}
+          path: /upload
+          method: POST
+          cors: true
+          headers:
+            - Content-Type
+
+  getAllFiles:
+    handler: src/getAllFiles/lambda.handler
+    # layers:
+    events:
+      - http:
+          # authorizer: ${self:custom.authorizer}
+          path: /
+          method: GET
+          cors: true
+          request:
+            parameters:
+              querystrings:
+                type: false
+                limit: false
+                skip: false
+                keyword: false
+  
+  rawFileHandler:
+    handler: src/rawFileHandler/lambda.handler
+    events:
+      - http:
+          # authorizer: ${self:custom.authorizer}
+          path: /handle
+          method: POST
+          cors: true
+          headers:
+            - Content-Type
+
