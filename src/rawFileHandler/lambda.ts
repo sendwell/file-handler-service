@@ -4,7 +4,6 @@ import Result from '../../lib/Response/Result'
 
 export const handler = Handler(async ({ event }: EventParam) => {
 	const { body } = event
-
 	let result: any
 
 	try {
