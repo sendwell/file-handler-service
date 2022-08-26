@@ -30,7 +30,7 @@ provider:
   runtime: nodejs12.x
   memorySize: 3000 #MB
   # ephemeralStorageSize: 7000 #MB
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'staging'}
   region: us-east-2
   timeout: 30
 

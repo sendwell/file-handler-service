@@ -8,7 +8,7 @@ phases:
   build:
     commands:
       - echo "Build started on `date`"
-      - node ./node_modules/serverless/bin/serverless.js deploy -s dev --verbose
+      - node ./node_modules/serverless/bin/serverless.js deploy -s $STAGE --verbose
   post_build:
     commands:
       - echo "Build completed on `date`"
