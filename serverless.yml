@@ -1,29 +1,29 @@
-app: file-service
-service: file-service
+app: file-service-handler
+service: file-service-handler
 
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
   - serverless-latest-layer-version
-  # - serverless-domain-manager
+  - serverless-domain-manager
 
 custom:
-  # customDomain:
-  #   domainName: ${self:provider.stage}-api.sendwell.com
-  #   stage: ${self:provider.stage}
-  #   basePath: file
-  #   certificateName: "*.sendwell.com"
-  #   createRoute53Record: false
-  #   endpointType: "regional"
-  #   securityPolicy: tls_1_2
-  #   autoDomain: false
-  # adminUrl:
-  #   dev: http://localhost:3000
-  #   test: http://localhost:3000
-  #   prod: http://localhost:3000
-  # authorizer:
-  #   arn: arn:aws:lambda:${self:provider.region}:${ssm:sendwell-account-id}:function:file-service-${self:provider.stage}-authorizer
-  #   resultTtlInSeconds: 0
+  customDomain:
+    domainName: ${self:provider.stage}-api.sendwell.com
+    stage: ${self:provider.stage}
+    basePath: file-handler
+    certificateName: "*.sendwell.com"
+    createRoute53Record: false
+    endpointType: "regional"
+    securityPolicy: tls_1_2
+    autoDomain: false
+  adminUrl:
+    dev: http://localhost:3000
+    test: http://localhost:3000
+    prod: http://localhost:3000
+  authorizer:
+    arn: arn:aws:lambda:${self:provider.region}:${ssm:sendwell-account-id}:function:auth-service-${self:provider.stage}-authorizer
+    resultTtlInSeconds: 0
 
 provider:
   name: aws
@@ -62,24 +62,11 @@ package:
     - node_modules/**
 
 functions:
-  upload:
-    handler: src/uploadFile/lambda.handler
-    # layers: ${self:custom.layers}
-    events:
-      - http:
-          # authorizer: ${self:custom.authorizer}
-          path: /upload
-          method: POST
-          cors: true
-          headers:
-            - Content-Type
-
   getAllFiles:
     handler: src/getAllFiles/lambda.handler
-    # layers:
     events:
       - http:
-          # authorizer: ${self:custom.authorizer}
+          authorizer: ${self:custom.authorizer}
           path: /
           method: GET
           cors: true
@@ -95,7 +82,7 @@ functions:
     handler: src/rawFileHandler/lambda.handler
     events:
       - http:
-          # authorizer: ${self:custom.authorizer}
+          authorizer: ${self:custom.authorizer}
           path: /handle
           method: POST
           cors: true

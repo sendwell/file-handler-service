@@ -12,10 +12,6 @@ export default class ConvertFileToJson {
 
 		}
 
-		// return await this.csvParse(file)
-		// return await this.convertCSVtoJson(file)
-		// return await this.csvToJson(file)
-		// return await this.csvJson(file)
 	}
 
 	public async csvJson(file) {
