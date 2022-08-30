@@ -64,7 +64,6 @@ package:
 functions:
   getAllFiles:
     handler: src/getAllFiles/lambda.handler
-      layers: ${self:custom.layers}
     events:
       - http:
           authorizer: ${self:custom.authorizer}
