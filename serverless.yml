@@ -22,7 +22,7 @@ custom:
   #   test: http://localhost:3000
   #   prod: http://localhost:3000
   authorizer:
-    arn: arn:aws:lambda:${self:provider.region}:${ssm:sendwell-account-id}:function:file-service-handler-${self:provider.stage}-authorizer
+    arn: arn:aws:lambda:${self:provider.region}:${ssm:sendwell-account-id}:function:auth-service-${self:provider.stage}-authorizer
     resultTtlInSeconds: 0
 
 provider:
